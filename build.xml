@@ -58,7 +58,7 @@
     <target name="compile" depends="checkstyle, compile-src, compile-tests"
             description="Performs a compile"/>
 
-    <target name="shared-object" depends="compile, generate-c-headers"
+    <target name="shared-object" depends="compile"
             description="Creates the shared library">
 
         <copy todir="${generated.src.c.dir}">
@@ -106,20 +106,11 @@
     <!-- Compiles the source classes -->
     <target name="compile-src" description="compile src files">
         <mkdir dir="${build.classes.dir}"/>
-        <javac destdir="${build.classes.dir}" debug="true" deprecation="on">
+        <mkdir dir="${generated.src.c.dir}"/>
+        <javac destdir="${build.classes.dir}" debug="true" deprecation="on" nativeheaderdir="${generated.src.c.dir}">
             <src location="${src.java.dir}"/>
             <classpath refid="project.class.path"/>
         </javac>
-    </target>
-
-
-    <target name="generate-c-headers">
-        <mkdir dir="${generated.src.c.dir}"/>
-        <javah destdir="${generated.src.c.dir}" class="net.sf.jpam.Pam">
-            <classpath>
-                <pathelement location="${build.classes.dir}"/>
-            </classpath>
-        </javah>
     </target>
 
     <target name="compile-tests" depends="compile-src">
